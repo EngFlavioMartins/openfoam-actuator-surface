@@ -1,6 +1,6 @@
 # OpenFOAM actuator surface
 
-![Rotor and wing actuator surfaces with momentum forcing and a schematic tip-vortex wake](docs/assets/header.svg)
+![Square thrust surface containing green vertical-force bands, with expanding tip-vortex paths rising downstream](docs/assets/header.svg)
 
 An OpenFOAM case representing rotor thrust and lift-producing surfaces through coded momentum sources. Cell selections define actuator regions; force vectors set their loading.
 
