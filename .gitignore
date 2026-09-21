@@ -1,12 +1,16 @@
-### Skip OpenFOAM files ###
+.venv/
+__pycache__/
+*.py[cod]
+outputs/
+.pytest_cache/
+.DS_Store
 
-# Ignore OpenFOAM results and other heavy files:
-./Results/
-./Solver/processor*
-./Solver/0.*
-./Solver/[0-9]*
-./Solver/constant/polyMesh/*
-./Solver/constant/processor*
-./Solver/log.*
-./Solver/*log
-./Solver/*.foam
+# Preserve generated OpenFOAM data exclusions from the legacy repository.
+/Results/
+/Solver/processor*/
+/Solver/[0-9]*/
+/Solver/constant/polyMesh/
+/Solver/constant/processor*/
+/Solver/log.*
+/Solver/*log
+/Solver/*.foam
