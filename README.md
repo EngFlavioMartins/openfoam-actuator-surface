@@ -1,6 +1,6 @@
 # OpenFOAM actuator surface
 
-![Square thrust surface containing green vertical-force bands, with expanding tip-vortex paths rising downstream](docs/assets/header.svg)
+![Front-oblique square rotor with horizontal source strips: thrust normal to the rotor, upward forces normal to the strips, and rising helical wake paths](docs/assets/header.svg)
 
 An OpenFOAM case representing rotor thrust and lift-producing surfaces through coded momentum sources. Cell selections define actuator regions; force vectors set their loading.
 
