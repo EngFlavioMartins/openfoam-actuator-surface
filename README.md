@@ -1,6 +1,8 @@
 # OpenFOAM actuator surface
 
-![Front-oblique square rotor with horizontal source strips: thrust normal to the rotor, upward forces normal to the strips, and rising helical wake paths](docs/assets/header.svg)
+**Rotors and wings as momentum sources in OpenFOAM.**
+
+![Wake of an actuator-surface rotor without wings (left) and with four wing strips (right): velocity planes and streamlines show the wake rising when the wings are present](docs/assets/render.webp)
 
 An OpenFOAM case representing rotor thrust and lift-producing surfaces through coded momentum sources. Cell selections define actuator regions; force vectors set their loading.
 
@@ -44,11 +46,15 @@ The setup uses direct force vectors. F = ½ρAU∞²C can be used when preparing
 
 The notebooks are optional post-processing resources. Header artwork is a conceptual interpretation of actuator forcing and vortex transport, not a simulated velocity field.
 
-## Scope and citation
+## Scope
 
-The original dictionaries and source terms are preserved. Compatibility with other OpenFOAM distributions has not been established; this presentation update does not claim a fresh OpenFOAM run.
+The original dictionaries and source terms are preserved and target the OpenFOAM Foundation releases. The OpenFOAM v2412 port below was run for the rotor-only and four-wing layouts.
 
-Code record: [Zenodo, 10.5281/zenodo.11615669](https://doi.org/10.5281/zenodo.11615669). Related research: [Regenerative multirotor wakes](https://doi.org/10.5194/wes-10-41-2025).
+## Citing
+
+This code accompanies F. A. C. Martins, A. van Zuijlen and C. S. Ferreira (2025), Proof of concept for multirotor systems with vortex-generating modes for regenerative wind energy, *Wind Energy Science* 10, 41–58, [doi:10.5194/wes-10-41-2025](https://doi.org/10.5194/wes-10-41-2025). Code record: [Zenodo, 10.5281/zenodo.11615669](https://doi.org/10.5281/zenodo.11615669).
+
+GitHub's *Cite this repository* button uses [CITATION.cff](CITATION.cff).
 
 ## Contributing and licence
 

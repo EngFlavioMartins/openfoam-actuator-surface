@@ -1,9 +1,29 @@
-cff-version: 1.1.0
-message: "If you use this software, please cite it as below."
-authors:
-- family-names: Martins
-  given-names: F. A. C.
-orcid: https://orcid.org/0000-0002-1374-5760
-title:EngFlavioMartins/Custom_OpenFOAM_Actuator_Surface: Licensed code
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "OpenFOAM actuator surface"
+type: software
 version: v0.1.2
 date-released: 2024-06-12
+doi: "10.5281/zenodo.11615669"
+license: Apache-2.0
+authors:
+  - family-names: Martins
+    given-names: Flavio A. C.
+    orcid: https://orcid.org/0000-0002-1374-5760
+repository-code: "https://github.com/EngFlavioMartins/openfoam-actuator-surface"
+preferred-citation:
+  type: article
+  title: "Proof of Concept for Multirotor Systems with Vortex-Generating Modes for Regenerative Wind Energy: A Study Based on Numerical Simulations and Experimental Data"
+  authors:
+    - family-names: Martins
+      given-names: Flavio A. C.
+    - family-names: van Zuijlen
+      given-names: A.
+    - family-names: Ferreira
+      given-names: C. S.
+  journal: "Wind Energy Science"
+  volume: 10
+  start: 41
+  end: 58
+  year: 2025
+  doi: "10.5194/wes-10-41-2025"
