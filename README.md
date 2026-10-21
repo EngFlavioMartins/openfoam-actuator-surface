@@ -55,3 +55,21 @@ Code record: [Zenodo, 10.5281/zenodo.11615669](https://doi.org/10.5281/zenodo.11
 See [CONTRIBUTING.md](CONTRIBUTING.md). Maintained by [Flavio Martins](https://engflaviomartins.github.io/).
 
 The existing [Apache 2.0 licence](LICENSE.txt) is unchanged.
+
+## OpenFOAM v2412 port and website render
+
+`cases/openfoam-v2412/` holds a port of the case to OpenFOAM v2412 (openfoam.com).
+
+- **What changes:** `prepare_case.sh` copies `Solver/` and replaces `momentumTransport` with `turbulenceProperties`. It also rewrites the coded momentum source in v2412 syntax, which reads the `Rotor` and `Blade` cell zones written by `topoSet`.
+- **What stays the same:** the mesh, initial fields, schemes and source distribution.
+- **Running it:** `run_case.sh` runs `topoSet`, `decomposePar`, `simpleFoam` and `reconstructPar`.
+
+```bash
+bash cases/openfoam-v2412/prepare_case.sh Resources/Setup-no-blades Resources/topoSetDict-OneBlade runs/case0B
+bash cases/openfoam-v2412/prepare_case.sh Resources/Setup-with-blades Resources/topoSetDict-FourBlades runs/case4B
+bash cases/openfoam-v2412/run_case.sh runs/case0B 5
+bash cases/openfoam-v2412/run_case.sh runs/case4B 5
+pvpython scripts/render/render_wake_slices.py runs/case4B outputs/render/wake-4B.png
+```
+
+Both cases converge within 300 iterations. `scripts/render/` holds the ParaView script for the website image: streamwise velocity on cross-flow planes and streamlines from the actuator ends.
