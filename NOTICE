@@ -1,0 +1,14 @@
+OpenFOAM actuator surface
+Copyright 2023–2026 Flavio A. C. Martins
+
+This product includes software developed by Flavio A. C. Martins
+(https://github.com/EngFlavioMartins/openfoam-actuator-surface).
+
+Under the Apache License 2.0 (section 4d), any redistribution of this software or of a
+derivative work must include this NOTICE file.
+
+If you use this software in academic work, please cite:
+
+    Martins, F. A. C., van Zuijlen, A. and Ferreira, C. S. (2025). Proof of concept for multirotor systems with vortex-generating modes for regenerative wind energy. Wind Energy Science 10, 41-58. https://doi.org/10.5194/wes-10-41-2025
+
+A BibTeX entry is given in README.md, and CITATION.cff provides the citation in other formats.

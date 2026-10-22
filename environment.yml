@@ -1,0 +1,7 @@
+# Create with:  conda env create -f environment.yml   then:  conda activate openfoam-actuator-surface
+name: openfoam-actuator-surface
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  - pip
