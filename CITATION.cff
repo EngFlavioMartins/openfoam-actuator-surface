@@ -6,6 +6,18 @@ version: v0.1.2
 date-released: 2024-06-12
 doi: "10.5281/zenodo.11615669"
 license: Apache-2.0
+abstract: "OpenFOAM actuator-surface model of a rotor with lift-producing wings: momentum sources for multirotor wake-recovery and wind-farm studies (Martins et al., Wind Energy Science 2025)."
+keywords:
+  - "OpenFOAM"
+  - "actuator surface"
+  - "actuator disk"
+  - "multirotor"
+  - "wind energy"
+  - "wake recovery"
+  - "vortex generators"
+  - "wind farm"
+  - "RANS"
+  - "k-omega SST"
 authors:
   - family-names: Martins
     given-names: Flavio A. C.

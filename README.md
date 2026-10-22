@@ -1,5 +1,13 @@
 # OpenFOAM actuator surface
 
+<p align="center">
+  <a href="https://doi.org/10.5194/wes-10-41-2025"><img src="https://img.shields.io/badge/paper-10.5194%2Fwes--10--41--2025-1F6FEB" alt="paper: 10.5194/wes-10-41-2025"></a>
+  <a href="https://doi.org/10.5281/zenodo.11615669"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.11615669-0D47A1" alt="DOI: 10.5281/zenodo.11615669"></a>
+  <a href="https://www.openfoam.com/"><img src="https://img.shields.io/badge/OpenFOAM-v2412-1C6EB4" alt="OpenFOAM: v2412"></a>
+  <a href="https://github.com/EngFlavioMartins/openfoam-actuator-surface/blob/HEAD/LICENSE.txt"><img src="https://img.shields.io/badge/license-Apache%202.0-2E7D32" alt="license: Apache 2.0"></a>
+  <a href="https://engflaviomartins.github.io/#regenerative-wakes"><img src="https://img.shields.io/badge/website-research%20page-15212B" alt="website: research page"></a>
+</p>
+
 **Rotors and wings as momentum sources in OpenFOAM.**
 
 <p align="center"><img src="docs/assets/render.webp" width="560" alt="Wake of an actuator-surface rotor without wings (top) and with four brushed-metal wing strips (bottom): the wake rises and recovers faster with the wings"></p>
