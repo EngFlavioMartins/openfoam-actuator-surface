@@ -7,7 +7,8 @@ Rules:
 - black background; the low end of each sequential map fades into it;
 - one-hue OpenONDA maps: thesis_blue for magnitudes, thesis_signed for signed
   fields with a meaningful zero (signed_dark on black), thesis_amber for streamlines and trajectories;
-- solids are matte grey PBR; no outlines, axes or floors;
+- solids are matte grey PBR; metal parts use metal() (brushed, grainy metal);
+  no outlines, axes or floors;
 - OpenGL with the OpenONDA light kit and filmic tone mapping;
 - text and the single colour bar are added afterwards by overlay.py (LaTeX,
   New PX), large enough to read at the figure's display size.
@@ -109,3 +110,70 @@ def save(view, path, width, height):
     view.Update()
     SaveScreenshot(str(path), view, ImageResolution=[width, height],
                    TransparentBackground=0, CompressionLevel=0)
+
+
+def _grain_textures(directory, size=512, seed=3):
+    """Brushed-metal textures: an ORM map (occlusion, roughness, metallic) with
+    streaky roughness, and a matching normal map. Written as PNG with VTK."""
+    from pathlib import Path
+
+    import numpy as np
+    from vtkmodules.util.numpy_support import numpy_to_vtk
+    from vtkmodules.vtkCommonDataModel import vtkImageData
+    from vtkmodules.vtkIOImage import vtkPNGWriter
+    rng = np.random.default_rng(seed)
+    noise = rng.standard_normal((size, size))
+    # streaks: smooth strongly along u (the brushing direction), lightly along v
+    k = np.exp(-np.linspace(-3, 3, 61) ** 2)
+    streak = np.apply_along_axis(lambda r: np.convolve(np.r_[r[-30:], r, r[:30]], k / k.sum(), "valid"), 1, noise)
+    fine = rng.standard_normal((size, size)) * 0.35
+    h = streak / streak.std() + fine
+    rough = np.clip(0.32 + 0.10 * h, 0.12, 0.7)
+    orm = np.stack([np.ones_like(h), rough, np.full_like(h, 0.2)], -1)   # partly metallic: a black
+    # background gives a fully metallic surface nothing to reflect, so keep some diffuse shading
+    gy, gx = np.gradient(h)
+    n = np.stack([-0.2 * gx, -0.2 * gy, np.ones_like(h)], -1)
+    n /= np.linalg.norm(n, axis=-1, keepdims=True)
+    paths = {}
+    for name, arr in (("metal_orm", orm), ("metal_normal", 0.5 * n + 0.5)):
+        img = vtkImageData()
+        img.SetDimensions(size, size, 1)
+        img.GetPointData().SetScalars(numpy_to_vtk((arr * 255).astype(np.uint8).reshape(-1, 3), deep=1))
+        path = Path(directory) / f"{name}.png"
+        w = vtkPNGWriter()
+        w.SetFileName(str(path))
+        w.SetInputData(img)
+        w.Write()
+        paths[name] = str(path)
+    return paths
+
+
+def metal(source, view, mapping="cylinder", rgb=(0.92, 0.93, 0.95), repeat=(4.0, 1.0)):
+    """Show ``source`` as brushed metal: metallic PBR with grainy roughness and
+    micro-normals. mapping: how texture coordinates are laid on (cylinder,
+    plane or sphere). Returns the display."""
+    import tempfile
+    from pathlib import Path as _P
+    from paraview.simple import (CreateTexture, ExtractSurface, Show, SurfaceNormals, SurfaceTangents,
+                                 TextureMaptoCylinder, TextureMaptoPlane, TextureMaptoSphere, Triangulate)
+    mapper = {"cylinder": TextureMaptoCylinder, "plane": TextureMaptoPlane, "sphere": TextureMaptoSphere}[mapping]
+    tc = mapper(Input=SurfaceNormals(Input=ExtractSurface(Input=source)))   # any dataset -> polygons
+    if mapping == "cylinder":
+        tc.PreventSeam = 0
+    tangents = SurfaceTangents(Input=Triangulate(Input=tc))   # tangents need triangles
+    tex = _grain_textures(_P(tempfile.mkdtemp()))
+    d = Show(tangents, view)
+    d.Representation = "Surface"
+    d.ColorArrayName = ["POINTS", ""]
+    d.DiffuseColor = d.AmbientColor = list(rgb)
+    d.Interpolation = "PBR"
+    d.Metallic = 1.0                       # scaled by the ORM texture's metallic channel
+    d.Roughness = 1.0                      # scaled by the ORM texture's roughness channel
+    d.MaterialTexture = CreateTexture(tex["metal_orm"])
+    d.NormalTexture = CreateTexture(tex["metal_normal"])
+    d.NormalScale = 1.0
+    d.RepeatTextures = 1
+    d.InterpolateTextures = 1
+    d.TextureTransform = "Transform2"
+    d.TextureTransform.Scale = [repeat[0], repeat[1], 1.0]
+    return d

@@ -2,7 +2,7 @@
 
 **Rotors and wings as momentum sources in OpenFOAM.**
 
-![Wake of an actuator-surface rotor without wings (top) and with four wing strips (bottom): the wake rises and recovers faster with the wings](docs/assets/render.webp)
+<p align="center"><img src="docs/assets/render.webp" width="560" alt="Wake of an actuator-surface rotor without wings (top) and with four brushed-metal wing strips (bottom): the wake rises and recovers faster with the wings"></p>
 
 A rotor and lift-producing wing strips are modelled as momentum sources on selected cells, so wakes can be studied without resolving the blades. The original case (`Solver/`) targets the OpenFOAM Foundation releases; `cases/openfoam-v2412/` runs it on OpenFOAM v2412 (openfoam.com).
 

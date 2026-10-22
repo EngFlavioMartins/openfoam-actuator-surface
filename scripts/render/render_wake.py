@@ -19,7 +19,7 @@ from paraview.simple import (AppendDatasets, Box, Calculator, CellDatatoPointDat
                              StreamTracerWithCustomSource, Tube)
 
 case, out = Path(sys.argv[1]), Path(sys.argv[2])
-width, height = (int(a) for a in (sys.argv[3:5] if len(sys.argv) > 4 else (2400, 750)))
+width, height = (int(a) for a in (sys.argv[3:5] if len(sys.argv) > 4 else (3600, 1125)))
 U_INF, X_ROTOR = 4.0, 10.0
 SLICES = [1, 4, 7, 10]
 DEFICIT_MAX = 0.62
@@ -50,10 +50,13 @@ for xd in SLICES:
     d.Ambient, d.Diffuse = 1.0, 0.0            # unlit: the field glows
 lut.RescaleTransferFunction(0.0, DEFICIT_MAX)
 
-def box(lo, hi, rgb, opacity=1.0):
+def box(lo, hi, rgb, opacity=1.0, metal=False):
     b = Box(XLength=hi[0] - lo[0], YLength=hi[1] - lo[1], ZLength=hi[2] - lo[2],
             Center=[(a + c) / 2 for a, c in zip(lo, hi)])
-    style.solid(Show(b, view), rgb, opacity=opacity)
+    if metal:
+        style.metal(b, view, mapping="plane", repeat=(2.0, 2.0))
+    else:
+        style.solid(Show(b, view), rgb, opacity=opacity)
 
 strips = []
 for lo, hi in re.findall(r"box\s*\(([^)]*)\)\s*\(([^)]*)\)", (case / "system" / "topoSetDict").read_text()):
@@ -66,8 +69,8 @@ for lo, hi in re.findall(r"box\s*\(([^)]*)\)\s*\(([^)]*)\)", (case / "system" / 
 blades = "BladeForce = vector(0.0, 0.0, 0.0)" not in (case / "ActuatorsSetup").read_text().replace("0.00", "0.0")
 if blades:
     for lo, hi in strips:
-        box(lo, hi, style.LIGHT_GREY)
-box([X_ROTOR - 0.012, 0.0, 9.988], [X_ROTOR + 0.012, rotor[0][1], 10.012], style.GREY)
+        box(lo, hi, style.LIGHT_GREY, metal=True)
+box([X_ROTOR - 0.012, 0.0, 9.988], [X_ROTOR + 0.012, rotor[0][1], 10.012], style.GREY, metal=True)
 
 heights = [(lo[1] + hi[1]) / 2 for lo, hi in strips] if blades else [rotor[0][1] + 0.05, rotor[1][1] - 0.05]
 seeds = AppendDatasets(Input=[PointSource(Center=[X_ROTOR + 0.12, y, z], Radius=0.05, NumberOfPoints=5)
