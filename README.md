@@ -1,57 +1,48 @@
 # OpenFOAM actuator surface
 
-![Front-oblique square rotor with horizontal source strips: thrust normal to the rotor, upward forces normal to the strips, and rising helical wake paths](docs/assets/header.svg)
+**Rotors and wings as momentum sources in OpenFOAM.**
 
-An OpenFOAM case representing rotor thrust and lift-producing surfaces through coded momentum sources. Cell selections define actuator regions; force vectors set their loading.
+<p align="center"><img src="docs/assets/render.webp" width="560" alt="Wake of an actuator-surface rotor without wings (top) and with four brushed-metal wing strips (bottom): the wake rises and recovers faster with the wings"></p>
 
-## Quick start
+A rotor and lift-producing wing strips are modelled as momentum sources on selected cells, so wakes can be studied without resolving the blades. The original case (`Solver/`) targets the OpenFOAM Foundation releases; `cases/openfoam-v2412/` runs it on OpenFOAM v2412 (openfoam.com).
 
-The original target is **OpenFOAM Foundation v9**, with MPI and a working C++ build environment. The coded source compiles at runtime.
+## Get started
 
 ```bash
 git clone https://github.com/EngFlavioMartins/openfoam-actuator-surface.git
 cd openfoam-actuator-surface
-foamVersion
+bash cases/openfoam-v2412/prepare_case.sh Resources/Setup-with-blades Resources/topoSetDict-FourBlades runs/four-wing
+bash cases/openfoam-v2412/run_case.sh runs/four-wing
 ```
 
-Start in a fresh clone with OpenFOAM loaded. Review the forces in [Solver/ActuatorsSetup](Solver/ActuatorsSetup) and the cell selections in [Solver/system/topoSetDict](Solver/system/topoSetDict).
+Run these in an OpenFOAM v2412 environment. Use `Resources/Setup-no-blades` for the rotor alone. Forces are set in `Resources/Setup-*`, the actuator cells in `Resources/topoSetDict-*`. Each run converges in under 300 iterations.
 
-The shipped configuration requests **eight processes** in `Solver/system/decomposeParDict`. Adjust the subdomain count and hierarchical decomposition together if required.
+## Make the figure above
 
 ```bash
-bash Solver/Allprepare.sh
-sh Solver/Allrun.sh
+sh scripts/render/make_figure.sh runs/rotor-only runs/four-wing
 ```
 
-Preparation restores the supplied initial fields and mesh, selects actuator cells and decomposes the case. The run script executes `simpleFoam`, reconstructs the latest solution and exports VTK. These scripts modify the working case; use a fresh clone or copy when preserving previous results.
+You need [ParaView](https://www.paraview.org/download/) (for `pvpython`), a LaTeX installation, and `pip install pyvista pillow`.
 
-## Configure a case
+## Cite
 
-| File | Controls |
-| --- | --- |
-| `Solver/ActuatorsSetup` | `RotorForce` and `BladeForce` vectors |
-| `Solver/system/topoSetDict` | Rotor and wing cell selections |
-| `Solver/constant/fvOptions` | Coded momentum-source distribution |
-| `Solver/system/controlDict` | Solver and output settings |
-| `Solver/system/decomposeParDict` | Parallel decomposition |
-| `Resources/` | Alternative layouts and force notebook |
+This code accompanies the paper below. If you use it, please cite (code record: [Zenodo, 10.5281/zenodo.11615669](https://doi.org/10.5281/zenodo.11615669)):
 
-The setup uses direct force vectors. F = ½ρAU∞²C can be used when preparing a load, but coefficients are not read automatically from a separate interface.
+```bibtex
+@article{martins2025multirotor,
+  author  = {Martins, Flavio A. C. and van Zuijlen, A. and Ferreira, C. S.},
+  title   = {Proof of Concept for Multirotor Systems with Vortex-Generating Modes for Regenerative Wind Energy: A Study Based on Numerical Simulations and Experimental Data},
+  journal = {Wind Energy Science},
+  volume  = {10},
+  pages   = {41--58},
+  year    = {2025},
+  doi     = {10.5194/wes-10-41-2025}
+}
+```
 
-## Batch studies
+GitHub's **Cite this repository** button (from [CITATION.cff](CITATION.cff)) gives the same reference in other formats.
 
-[run-all-cases.sh](run-all-cases.sh) sequences rotor-only and one-, two- and four-wing configurations, including no-drag variants. It invokes cleanup and replaces settings between runs. Review it before starting; saved studies are copied to `Results/`.
+## Licence
 
-The notebooks are optional post-processing resources. Header artwork is a conceptual interpretation of actuator forcing and vortex transport, not a simulated velocity field.
-
-## Scope and citation
-
-The original dictionaries and source terms are preserved. Compatibility with other OpenFOAM distributions has not been established; this presentation update does not claim a fresh OpenFOAM run.
-
-Code record: [Zenodo, 10.5281/zenodo.11615669](https://doi.org/10.5281/zenodo.11615669). Related research: [Regenerative multirotor wakes](https://doi.org/10.5194/wes-10-41-2025).
-
-## Contributing and licence
-
-See [CONTRIBUTING.md](CONTRIBUTING.md). Maintained by [Flavio Martins](https://engflaviomartins.github.io/).
-
-The existing [Apache 2.0 licence](LICENSE.txt) is unchanged.
+Apache 2.0; see [LICENSE.txt](LICENSE.txt).
