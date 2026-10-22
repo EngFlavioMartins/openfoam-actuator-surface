@@ -10,28 +10,45 @@
 
 **Rotors and wings as momentum sources in OpenFOAM.**
 
-<p align="center"><img src="docs/assets/render.webp" width="560" alt="Wake of an actuator-surface rotor without wings (top) and with four brushed-metal wing strips (bottom): the wake rises and recovers faster with the wings"></p>
+<p align="center"><img src="docs/assets/animation.webp" width="560" alt="The wake of a rotor with four brushed-metal wing strips drawn out downstream: streamlines from the wing tips and planes of the velocity deficit"></p>
 
 A rotor and lift-producing wing strips are modelled as momentum sources on selected cells, so wakes can be studied without resolving the blades. The original case (`Solver/`) targets the OpenFOAM Foundation releases; `cases/openfoam-v2412/` runs it on OpenFOAM v2412 (openfoam.com).
 
-## Get started
+## Run it
 
 ```bash
 git clone https://github.com/EngFlavioMartins/openfoam-actuator-surface.git
 cd openfoam-actuator-surface
-bash cases/openfoam-v2412/prepare_case.sh Resources/Setup-with-blades Resources/topoSetDict-FourBlades runs/four-wing
-bash cases/openfoam-v2412/run_case.sh runs/four-wing
+python run.py
 ```
 
-Run these in an OpenFOAM v2412 environment. Use `Resources/Setup-no-blades` for the rotor alone. Forces are set in `Resources/Setup-*`, the actuator cells in `Resources/topoSetDict-*`. Each run converges in under 300 iterations.
+`run.py` prepares the four-wing case in `runs/four-wing` and, if OpenFOAM is installed and loaded, runs it (about 15 minutes on 5 cores); otherwise it tells you the one command to run once OpenFOAM is there. The first time, it installs what it needs into a private `.venv` folder (a minute or so); after that it starts at once. All you need is Python 3.10 or newer (and OpenFOAM to run the case).
 
-## Make the figure above
+<details>
+<summary>Prefer conda?</summary>
 
 ```bash
-sh scripts/render/make_figure.sh runs/rotor-only runs/four-wing
+conda env create -f environment.yml
+conda activate openfoam-actuator-surface
+python examples/quick_start.py
 ```
 
-You need [ParaView](https://www.paraview.org/download/) (for `pvpython`), a LaTeX installation, and `pip install pyvista pillow`.
+</details>
+
+**Next:** Use `Resources/Setup-no-blades` for the rotor alone. Forces are set in `Resources/Setup-*` and the actuator cells in `Resources/topoSetDict-*`; each run converges in under 300 iterations.
+
+## Figure and animation
+
+<p align="center"><img src="docs/assets/render.webp" width="560" alt="Wake of an actuator-surface rotor without wings (top) and with four brushed-metal wing strips (bottom): the wake rises and recovers faster with the wings"></p>
+
+The rotor alone (top) and with four wing strips (bottom): with the wings, the wake rises and recovers faster.
+
+```bash
+sh scripts/render/make_figure.sh runs/rotor-only runs/four-wing          # the figure
+python scripts/render/make_animation.py runs/four-wing   # the animation at the top
+```
+
+Both need [ParaView](https://www.paraview.org/download/) and finished runs; the figure also needs LaTeX.
 
 ## Cite
 
@@ -53,4 +70,4 @@ GitHub's **Cite this repository** button (from [CITATION.cff](CITATION.cff)) giv
 
 ## Licence
 
-Apache 2.0; see [LICENSE.txt](LICENSE.txt).
+[Apache 2.0](LICENSE.txt): you are free to use, change and share this code, also commercially. If you pass it on, keep the [NOTICE](NOTICE) file with it; it says where the code comes from and how to cite it.
