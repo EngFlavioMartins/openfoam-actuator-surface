@@ -123,6 +123,8 @@ def compose(panels, stem, bar=None, layout="column", check=True, notes=()):
 \usepackage[T1]{fontenc}
 \usepackage{newpxtext,newpxmath}
 \usepackage{graphicx}
+\usepackage{xcolor}
+\pagecolor{black}%% the rasteriser rounds the page up to whole pixels: keep that sliver black
 \begin{document}
 \begin{tikzpicture}[x=1mm,y=1mm,font=\fontsize{10.95}{13.1}\selectfont]
 \clip (0,0) rectangle (%s,%s);
@@ -137,7 +139,11 @@ def compose(panels, stem, bar=None, layout="column", check=True, notes=()):
             raise RuntimeError(run.stdout[-2000:])
         subprocess.run(["pdftoppm", "-png", "-r", f"{PX_PER_MM * 25.4:.3f}", "-singlefile", f"{name}.pdf", name],
                        cwd=work, check=True)
-        return Image.open(work / f"{name}.png").convert("RGB").resize((W_px, H_px), Image.LANCZOS)
+        img = Image.open(work / f"{name}.png").convert("RGB")
+        # pdftoppm rounds the page up to whole pixels and paints the part past the page white:
+        # keep only pixels that lie wholly inside the page
+        inside = (min(img.width, int(WIDTH_MM * PX_PER_MM)), min(img.height, int(H * PX_PER_MM)))
+        return img.crop((0, 0) + inside).resize((W_px, H_px), Image.LANCZOS)
 
     note_lines = []
     if notes:
